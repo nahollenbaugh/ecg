@@ -1,0 +1,33 @@
+cabal-version:       >=1.10
+
+name:                ecg
+version:             0.1.0.0
+-- license-file:        LICENSE
+build-type:          Simple
+-- extra-source-files:  CHANGELOG.md
+
+Test-Suite ecg-test
+  main-is:             Test.hs
+  type:                exitcode-stdio-1.0
+  build-tool-depends: HTF:htfpp
+  build-depends: base >= 4.0
+               , HTF
+  hs-source-dirs: test src
+  default-language: Haskell2010
+  other-modules: TestZquot TestZquotUtil TestECGroup TestECGroupUtil 
+                 Zquot ZquotUtil ECGroup ECGroupUtil
+                 Util Functions
+
+executable ecg
+  main-is:             ArithmeticSite.hs
+  other-modules:       Zquot ZquotUtil ECGroup ECGroupUtil
+                       Functions Util
+  build-depends:       base >= 4.0
+                     , yesod >= 1.0 && <2.0
+                     , text
+                     , yesod-form
+                     , transformers
+                     , HTF
+                     , blaze-markup
+  hs-source-dirs:      src
+  default-language:    Haskell2010
