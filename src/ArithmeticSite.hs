@@ -38,6 +38,7 @@ getHomeR = do
   (sqrtModpWidget,       sqrtModpEnctype)       <- generateFormPost $ sqrtModpForm Nothing Nothing Nothing
   (cornacchiaWidget,     cornacchiaEnctype)     <- generateFormPost $ cornacchiaForm Nothing Nothing
   defaultLayout $ do
+    projectDescription
     formLucius
     formJulius
     [whamlet|
@@ -50,7 +51,7 @@ getHomeR = do
         ^{zquotOperationWidget}
   <tr>
     <th scope="row">
-      square roots in prime fields&nbsp
+      Square roots in prime fields&nbsp
       <a href=@{SqrtModpInfoR}>?
     <td>
       <form method="post" action=@{SqrtModpResultR} enctype=#{sqrtModpEnctype}>
@@ -82,6 +83,21 @@ td, th
   padding: 0.5em
   font-weight: normal
 |]
+projectDescription = [whamlet|
+<p>
+  This is a site I made using the
+  <a href="http://yesodweb.com">Yesod
+  web framework.  It does some silly things mostly with elliptic curve groups
+  over (for now) finite prime fields.  For elliptic curve groups, see
+  <a href="https://en.wikipedia.org/wiki/Elliptic_curve#The_group_law">Wikipedia
+  though the details are worked out in characteristic not 2 or 3 because the
+  equations are much simplified when we are allowed to divide by 2 and 3.  For
+  this project I have followed the standard notation in 
+  <a href="https://link.springer.com/book/10.1007/978-0-387-09494-6">Silverman
+  (though note that the first edition contains some typoes).  
+|]
+
+
 
 cornacchiaForm d p extra = do
   (dRes, dView) <- mreq intField (inputFieldSettings "d") d
@@ -108,19 +124,21 @@ y^2
 getSqrtModpInfoR
   = defaultLayout [whamlet|
 <p>
-  Use the Tonelli Shanks algorithm (algorithm 1.5.1 in cohen, the following
+  Use the Tonelli Shanks algorithm (algorithm 1.5.1 in
+  <a href="https://link.springer.com/book/10.1007/978-3-662-02945-9">Cohen#
+  \. the following
   description of the algorithm summarizes the discussion there) to compute square
   roots mod p in expected time O(ln(p)^4).  There are formulas of the form
 <p> \sqrt a = a^\{(p+1)/4} when p\equiv 3 mod 4
-<p> and \sqrt a is a^\{(p+3)/8} or 2a(4a)^\{(p-5)/8} when p\equiv 5 mod 8
-  that solve the problem for increasingly many p, and this algorithm allows
+<p> and \sqrt a is either a^\{(p+3)/8} or 2a(4a)^\{(p-5)/8} when p\equiv 5 mod 8
+  \ that solve the problem for increasingly many p, and this algorithm allows
   us to solve the problem for general p by expressing a square root as the product
   of an easily computed power of a (the (p-5)/4's and (p+1)/4 above) and an
   element of the maximal subgroup of
   (Z/p)* of order a power of two.  The second factor is computed by first
   determining a generator.  It is easy to check that a number is generates, and
   in fact to obtain the claimed average case bound we ought to select candidates
-  randomly, but in practice it doesn't (seem to) matter so we don't.
+  randomly, but in practice it doesn't (seem to) matter so we don't
 |]
 getCornacchiaInfoR 
   = defaultLayout [whamlet|
@@ -379,6 +397,7 @@ td
 th
   border: 3px solid black
 |]
+  
 
 data Op = Plus | Minus | Times | Div deriving Eq
 ops = [("+"::Text,Plus), ("-",Minus), ("*",Times), ("/",Div)]
